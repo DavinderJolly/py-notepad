@@ -12,18 +12,13 @@ from prompt_toolkit.layout.containers import (
     Window,
 )
 from prompt_toolkit.filters import Condition
-from prompt_toolkit.widgets import (
-    MenuContainer,
-    MenuItem,
-    TextArea,
-)
 from prompt_toolkit.layout.controls import FormattedTextControl
 from prompt_toolkit.layout.layout import Layout
 from prompt_toolkit.lexers import PygmentsLexer
 from prompt_toolkit.styles import Style
 from prompt_toolkit.widgets import MenuContainer, MenuItem, TextArea
-from pygments.lexers.python import PythonLexer
 from pygments.lexers import find_lexer_class_for_filename
+from pygments.util import ClassNotFound
 
 
 class ApplicationState:
@@ -55,7 +50,7 @@ lexer = None
 if filename is not None:
     try:
         lexer = find_lexer_class_for_filename(filename)
-    except:
+    except ClassNotFound:
         lexer = None
 
     lexer = PygmentsLexer(lexer)
