@@ -39,10 +39,6 @@ def get_text_from_file(filename):
     return text
 
 
-def get_datetime():
-    return "Opened at " + datetime.now().strftime("%d/%m/%Y, %H:%M:%S")
-
-
 # Parsing Argumemnts
 parser = argparse.ArgumentParser()
 parser.add_argument("filename", nargs="?")
