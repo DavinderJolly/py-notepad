@@ -98,8 +98,9 @@ def _save_file(event) -> None:
 
 
 @bindings.add("c-c")
-def _(event):
-    ...
+def _focus(event):
+    "Focus on the menu"
+    event.app.layout.focus(root_container.window)
 
 
 # Menu items
