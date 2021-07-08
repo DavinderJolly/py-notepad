@@ -8,7 +8,7 @@ from prompt_toolkit.widgets import MenuContainer, MenuItem, TextArea
 from prompt_toolkit.layout.controls import FormattedTextControl
 from prompt_toolkit.layout.layout import Layout
 from prompt_toolkit.styles import Style
-from prompt_toolkit.lexers import DynamicLexer, PygmentsLexer
+from prompt_toolkit.lexers import PygmentsLexer
 from pygments.lexers.python import PythonLexer
 
 
@@ -21,6 +21,7 @@ text_field = TextArea(
 
 
 def get_datetime():
+    "Get opening datetime"
     return "Opened at " + datetime.now().strftime("%d/%m/%Y, %H:%M:%S")
 
 
@@ -35,12 +36,14 @@ bindings = KeyBindings()
 
 @bindings.add("c-d")
 def _exit(event):
+    "Exit the editor"
     get_app().exit()
 
 
 @bindings.add("c-c")
-def _(event):
-    ...
+def _focus(event):
+    "Focus on the menu"
+    event.app.layout.focus(root_container.window)
 
 
 # Menu items
