@@ -23,6 +23,7 @@ from prompt_toolkit.lexers import PygmentsLexer
 from prompt_toolkit.styles import Style
 from prompt_toolkit.widgets import MenuContainer, MenuItem, TextArea
 from pygments.lexers.python import PythonLexer
+from pygments.lexers import find_lexer_class_for_filename
 
 
 class ApplicationState:
@@ -49,11 +50,22 @@ args = vars(parser.parse_args())
 
 filename = args.get("filename", None)
 text = get_text_from_file(filename)
+lexer = None
+
+if filename is not None:
+    try:
+        lexer = find_lexer_class_for_filename(filename)
+    except:
+        lexer = None
+
+    lexer = PygmentsLexer(lexer)
+else:
+    lexer = lexer
 
 # Editing area
 text_field = TextArea(
     text=text,
-    lexer=PygmentsLexer(PythonLexer),
+    lexer=lexer,
     scrollbar=True,
     line_numbers=True,
 )
