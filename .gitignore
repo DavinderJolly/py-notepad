@@ -113,6 +113,12 @@ ENV/
 env.bak/
 venv.bak/
 
+# Pycharm project stuff
+.idea
+
+# VS Code project settings
+.vscode
+
 # Spyder project settings
 .spyderproject
 .spyproject
