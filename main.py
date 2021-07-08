@@ -1,7 +1,6 @@
 from datetime import datetime
 
 from prompt_toolkit.application import Application
-from prompt_toolkit.application.current import get_app
 from prompt_toolkit.key_binding import KeyBindings
 from prompt_toolkit.layout.containers import HSplit, VSplit, Window
 from prompt_toolkit.widgets import MenuContainer, MenuItem, TextArea
