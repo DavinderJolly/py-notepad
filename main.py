@@ -64,7 +64,7 @@ status_bar_field = VSplit([Window(FormattedTextControl(get_datetime()))], height
 def _no_filename_save(event):
     global filename
     filename = event.text
-    with open(event.text, 'wt') as f:
+    with open(event.text, "wt") as f:
         f.write(text_field.text)
     ApplicationState.show_status_bar = True
     ApplicationState.ask_for_filename = False
@@ -74,7 +74,10 @@ def _no_filename_save(event):
 
 
 filename_prompt_field_text = TextArea(
-    scrollbar=False, line_numbers=False, multiline=False, accept_handler=_no_filename_save
+    scrollbar=False,
+    line_numbers=False,
+    multiline=False,
+    accept_handler=_no_filename_save,
 )
 
 filename_prompt_field = VSplit(
@@ -116,7 +119,6 @@ def _save_file(event) -> None:
         ApplicationState.show_status_bar = False
         ApplicationState.ask_for_filename = True
         get_app().layout.focus(filename_prompt_field_text)
-
 
 
 @bindings.add("c-c")
