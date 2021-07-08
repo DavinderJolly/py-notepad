@@ -4,6 +4,7 @@ from datetime import datetime
 
 from prompt_toolkit.application import Application
 from prompt_toolkit.application.current import get_app
+from prompt_toolkit.filters import Condition
 from prompt_toolkit.key_binding import KeyBindings
 from prompt_toolkit.layout.containers import (
     ConditionalContainer,
@@ -22,8 +23,10 @@ from pygments.util import ClassNotFound
 
 
 class ApplicationState:
-    "Application state"
+    """Application state"""
+
     show_status_bar = True
+    ask_for_filename = False
 
 
 def get_text_from_file(filename):
@@ -34,7 +37,8 @@ def get_text_from_file(filename):
     return text
 
 
-# Parsing Argumemnts
+
+# Parsing Arguments
 parser = argparse.ArgumentParser()
 parser.add_argument("filename", nargs="?")
 args = vars(parser.parse_args())
@@ -64,12 +68,36 @@ text_field = TextArea(
 
 # Status bar area
 def get_datetime():
-    "Get opening datetime"
+    """Get opening datetime"""
     return "Opened at " + datetime.now().strftime("%d/%m/%Y, %H:%M:%S")
 
 
 status_bar_field = VSplit([Window(FormattedTextControl(get_datetime()))], height=1)
 
+
+def _no_filename_save(event):
+    global filename
+    filename = event.text
+    with open(event.text, "wt") as f:
+        f.write(text_field.text)
+    ApplicationState.show_status_bar = True
+    ApplicationState.ask_for_filename = False
+    get_app().layout.focus(text_field)
+
+    return True
+
+
+filename_prompt_field_text = TextArea(
+    scrollbar=False,
+    line_numbers=False,
+    multiline=False,
+    accept_handler=_no_filename_save,
+)
+
+filename_prompt_field = VSplit(
+    [Window(FormattedTextControl("Path To Save File: ")), filename_prompt_field_text],
+    height=1,
+)
 
 # UI main body
 body = HSplit(
@@ -79,9 +107,12 @@ body = HSplit(
             content=status_bar_field,
             filter=Condition(lambda: ApplicationState.show_status_bar),
         ),
+        ConditionalContainer(
+            content=filename_prompt_field,
+            filter=Condition(lambda: ApplicationState.ask_for_filename),
+        ),
     ]
 )
-
 
 # Keybindings
 bindings = KeyBindings()
@@ -89,7 +120,7 @@ bindings = KeyBindings()
 
 @bindings.add("c-d")
 def _exit(event):
-    "Exit the text editor"
+    """Exit the text editor"""
     event.app.exit()
 
 
@@ -98,11 +129,15 @@ def _save_file(event) -> None:
     if filename is not None:
         with open(filename, "w") as f:
             f.write(text_field.text)
+    else:
+        ApplicationState.show_status_bar = False
+        ApplicationState.ask_for_filename = True
+        get_app().layout.focus(filename_prompt_field_text)
 
 
 @bindings.add("c-c")
 def _focus(event):
-    "Focus on the menu"
+    """Focus on the menu"""
     event.app.layout.focus(root_container.window)
 
 
@@ -128,16 +163,10 @@ root_container = MenuContainer(
     key_bindings=bindings,
 )
 
-
 layout = Layout(root_container, focused_element=text_field)
 
 # Global style
-style = Style.from_dict(
-    {
-        # empty for now
-    }
-)
-
+style = Style.from_dict({})  # empty for now
 
 application = Application(
     layout=layout,
