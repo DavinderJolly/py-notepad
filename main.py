@@ -37,7 +37,7 @@ bindings = KeyBindings()
 @bindings.add("c-d")
 def _exit(event):
     "Exit the editor"
-    get_app().exit()
+    event.app.exit()
 
 
 @bindings.add("c-c")
