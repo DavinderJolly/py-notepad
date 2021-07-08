@@ -53,6 +53,7 @@ bindings = KeyBindings()
 
 @bindings.add("c-d")
 def _exit(event):
+    "Exit the text editor"
     event.app.exit()
 
 
