@@ -31,7 +31,7 @@ class ApplicationState:
 
 def get_text_from_file(filename):
     text = ""
-    if filename is not None and os.path.isfile(filename):
+    if filename is not None and os.path.exists(filename):
         with open(filename) as f:
             text = f.read()
     return text
